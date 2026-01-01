@@ -8,12 +8,22 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 public interface stockDayKServiceImpl {
+    /* GetMethod */
+    Response<Long> getStockNumByDayAndSymbol(LocalDate day, String symbol);
 
-    public Response<stockDayKDTO> getStockDayKById(long id);
+    Response<stockDayKDTO> getStockDayKById(long id);
 
-    public Response<stockDayKDTO>getStockDayKByDayAndSymbol(LocalDate day, String symbol);
+    Response<stockDayKDTO>getStockDayKByDayAndSymbol(LocalDate day, String symbol);
 
-    public Response<Long> getStockNumByDaySQL(LocalDate day);
+    Response<Long> getStockNumByDay(LocalDate day);
 
+    /* PostMethod */
+    Response<String> addStockDayK(stockDayKDTO stockDayKDTO);
 
+    Response<String> addStockDayKs(Collection<stockDayKDTO> stockDayKDTOs);
+
+    /* DelMethod */
+    Response<String> deleteStockDayKById(Long id);
+
+    Response<String> deleteStockDayKBySymbolAndDay(LocalDate day, String symbol);
 }

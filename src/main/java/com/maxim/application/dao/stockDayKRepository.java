@@ -1,5 +1,6 @@
 package com.maxim.application.dao;
 
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 public interface stockDayKRepository extends JpaRepository<stockDayK, Long> {
 
     // 这里JAP命名规则 -> 会自动统计一个trade_date列的个数
-    Long countByTradeDate(LocalDate day);
+    //    Long countByTradeDate(LocalDate day);
 
     /* 对于更为复杂的SQL查询, 可以使用@SQL关键字进行查询
     @Param -> 命名参数
@@ -25,6 +26,11 @@ public interface stockDayKRepository extends JpaRepository<stockDayK, Long> {
     stockDayK getStockDayKByDayAndSymbol(@Param("day") LocalDate day, @Param("symbol") String symbol);
 
     @Query(value = "SELECT COUNT(*) from stockDayK where trade_date = ?1", nativeQuery = true)
-    Long countByTradeDateSQL(LocalDate day);
+    Long countByTradeDate(LocalDate day);
 
+    @Query(value = "SELECT COUNT(*) FROM stockDayK s WHERE s.tradeDate = :day AND s.symbol = :symbol", nativeQuery = false)
+    Long countByTradeDateAndSymbol(@Param("day") LocalDate day, @Param("symbol") String symbol);
+
+    @SQLDelete(sql = "DELETE FROM stockDayK WHERE trade_date = ?1 AND symbol = ?2")
+    void deleteByTradeDateAndSymbol(LocalDate day, String symbol);
 }

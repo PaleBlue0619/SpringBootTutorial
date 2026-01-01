@@ -17,7 +17,7 @@ public class Response <T>{
     }
 
     // 返回空信息
-    public static<K> Response<K> newEmpty(){
+    public static<K> Response<K> newEmpty(String infoMsg){
         Response res = new Response<>();
         res.setSuccess(true);
         return res;
