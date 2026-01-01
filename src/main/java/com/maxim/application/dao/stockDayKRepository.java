@@ -1,6 +1,8 @@
 package com.maxim.application.dao;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLInsert;
+import org.hibernate.annotations.SQLUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +15,6 @@ import java.time.LocalDate;
 * */
 @Repository
 public interface stockDayKRepository extends JpaRepository<stockDayK, Long> {
-
     // 这里JAP命名规则 -> 会自动统计一个trade_date列的个数
     //    Long countByTradeDate(LocalDate day);
 
@@ -22,6 +23,7 @@ public interface stockDayKRepository extends JpaRepository<stockDayK, Long> {
     ?1 ?2 -> 位置参数 & :param1 :param2 -> 直接使用参数名称作为占位符
     nativeQuery: Native Query是指直接使用数据库的原生SQL语句，而不是通过JPA或Hibernate的查询语言（如JPQL）进行查询 -> 更高的性能
     */
+
     @Query(value = "SELECT s FROM stockDayK s WHERE s.tradeDate = :day AND s.symbol = :symbol", nativeQuery = false)
     stockDayK getStockDayKByDayAndSymbol(@Param("day") LocalDate day, @Param("symbol") String symbol);
 
