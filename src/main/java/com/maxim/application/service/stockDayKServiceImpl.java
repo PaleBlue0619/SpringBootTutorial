@@ -6,17 +6,19 @@ import com.maxim.application.dto.stockDayKDTO;
 import com.maxim.application.converter.stockDayKConverter;
 import com.maxim.application.dao.stockDayKRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.query.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class stockDayKServiceImpl implements stockDayKService {
@@ -182,11 +184,43 @@ public class stockDayKServiceImpl implements stockDayKService {
 
     /* Specification */
     @Override
-    public Response<Collection<stockDayKDTO>> filterStockDayKs(
-        pageStockDayKRequest request){
-        PageRequest pageRequest = PageRequest.of(request.getPageNumber(), request.getPageSize());
-        return Response.newSuccess(stockDayKSpecification.
-        ).map(stockDayKConverter::toDTO));
+    public Response<Page<stockDayKDTO>> filterStockDayKs(pageStockDayKRequest request) {
+        // 创建分页请求对象
+        Pageable pageable = PageRequest.of(
+            request.getPageNumber(),
+            request.getPageSize(),
+            // 按交易日期降序排列，确保最新的数据在前面
+            org.springframework.data.domain.Sort.by(
+                org.springframework.data.domain.Sort.Direction.DESC,
+                "tradeDate"
+            )
+        );
+
+        // 构建查询条件
+        Specification<stockDayK> specification = Specification.where(
+            stockDayKSpecification.hasSymbolAndSortByTradeDate(request.getSymbol())
+        );
+
+        // 执行分页查询
+        org.springframework.data.domain.Page<stockDayK> pageResult =
+            stockDayKRepository.findAll(specification, pageable);
+
+        // 将结果转换为DTO并返回
+        List<stockDayKDTO> dtoList = pageResult.getContent()
+            .stream()
+            .map(stockDayKConverter::toDTO)
+            .collect(java.util.stream.Collectors.toList());
+
+        // 创建分页结果对象（如果Response支持分页结果）
+        org.springframework.data.domain.Page<stockDayKDTO> pageResultDTO =
+            new org.springframework.data.domain.PageImpl<>(
+                dtoList,
+                pageResult.getPageable(),
+                pageResult.getTotalElements()
+            );
+
+        return Response.newSuccess(pageResultDTO);
     }
+
 
 }

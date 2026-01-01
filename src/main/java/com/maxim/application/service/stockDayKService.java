@@ -1,8 +1,9 @@
 package com.maxim.application.service;
 
 import com.maxim.application.Response;
+import com.maxim.application.dao.pageStockDayKRequest;
 import com.maxim.application.dto.stockDayKDTO;
-
+import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -34,5 +35,7 @@ public interface stockDayKService {
                                            Double preClose, Double cmv, Double mv);
 
     /* Specification */
+    Response<Page<stockDayKDTO>> filterStockDayKs(pageStockDayKRequest request);
+
 
 }

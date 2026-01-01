@@ -1,9 +1,8 @@
 package com.maxim.application.dao;
 
 import jakarta.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
+//import javax.persistence.Entity;
+//import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

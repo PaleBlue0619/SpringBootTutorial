@@ -4,6 +4,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLInsert;
 import org.hibernate.annotations.SQLUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 * JPA 部分代码
 * */
 @Repository
-public interface stockDayKRepository extends JpaRepository<stockDayK, Long> {
+public interface stockDayKRepository extends JpaRepository<stockDayK, Long>, JpaSpecificationExecutor<stockDayK> {
     // 这里JAP命名规则 -> 会自动统计一个trade_date列的个数
     //    Long countByTradeDate(LocalDate day);
 

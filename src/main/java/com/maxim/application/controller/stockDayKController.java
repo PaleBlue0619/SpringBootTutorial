@@ -90,9 +90,16 @@ public class stockDayKController {
     }
 
     /* Specification 方法 */
-    @GetMapping
-    public Page<stockDayKDTO> index(pageStockDayKRequest request){
-        return stockDayKServiceImplObj.filterStockDayKs(request);
+    /* Specification 方法 - 高级查询和分页 */
+    @GetMapping("/stockDayK/search")
+    public Response<Page<stockDayKDTO>> searchStockDayKs(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String symbol) {
+            pageStockDayKRequest request = new pageStockDayKRequest();
+            request.setPageNumber(pageNumber);
+            request.setPageSize(pageSize);
+            request.setSymbol(symbol);
+            return stockDayKServiceImplObj.filterStockDayKs(request);
     }
-
 }
